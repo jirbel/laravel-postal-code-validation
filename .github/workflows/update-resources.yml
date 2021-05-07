@@ -2,13 +2,12 @@ name: update-resources
 
 on:
   schedule:
-    - cron: '0 0 * * 0'
+    - cron: '0 0 1 * *'
 
 jobs:
   laravel:
     runs-on: ubuntu-latest
     strategy:
-      fail-fast: true
     name: Check Google API for updates
     steps:
       - name: Checkout code
