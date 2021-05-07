@@ -78,7 +78,7 @@ The field under validation must be a valid postal code in at least one of the gi
 countries in [ISO 3166-1 alpha-2](https://en.wikipedia.org/wiki/ISO_3166-1_alpha-2) format.
 
 ```php
-'postal_code' => 'postal_code:NL,DE,FR,BE'
+'postal_code' => 'postal_code:NL',
 ```
 
 #### postal_code_with:foo,bar,...
@@ -86,29 +86,35 @@ The field under validation must be a postal code in at least one of the countrie
 one of the specified fields is present.
 
 ```php
-'billing.country' => 'required|string|max:2',
+'country' => 'required|string|max:2',
 ...
-'shipping.country' => 'nullable|string|max:2',
-'shipping.postal_code' => 'postal_code_with:billing.country,shipping.country'
+'postal_code' => 'postal_code_with:country',
 ```
 
 ### Fluent API
 If you prefer using a fluent object style over string based rules, that's also available:
 
 ```php
+use Axlon\PostalCodeValidation\Support\Facades\PostalCodes;
+
+...
+
 'postal_code' => [
-    PostalCode::for('NL')->or('BE'),
+    PostalCodes::for('NL'),
 ],
 ```
 
 The same goes for the `postal_code_with` rule:
 
 ```php
-'billing.country' => 'required|string|max:2',
+use Axlon\PostalCodeValidation\Support\Facades\PostalCodes;
+
 ...
-'shipping.country' => 'nullable|string|max:2',
-'shipping.postal_code' => [
-    PostalCode::with('billing.country')->or('shipping.country')
+
+'country' => 'required|string|max:2',
+...
+'postal_code' => [
+    PostalCodes::with('country'),
 ],
 ```
 
