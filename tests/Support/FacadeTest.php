@@ -20,4 +20,19 @@ class FacadeTest extends TestCase
         $this->assertEquals('postal_code:a,b', PostalCodes::for('a', 'b'));
         $this->assertEquals('postal_code:a,b,c', PostalCodes::for('a', ['b', 'c']));
     }
+
+    public function testItValidatesPostalCodes(): void
+    {
+        $this->assertTrue(PostalCodes::validate('NL', '1234 AB'));
+        $this->assertFalse(PostalCodes::validate('NL', 'invalid'));
+    }
+
+    public function testItValidatesPostalCodesWithOverrides(): void
+    {
+        PostalCodes::override('NL', '/^test$/i');
+        $this->assertTrue(PostalCodes::validate('NL', 'test'));
+
+        PostalCodes::override(['NL' => '/^test-with-array$/i']);
+        $this->assertTrue(PostalCodes::validate('NL', 'test-with-array'));
+    }
 }

@@ -40,11 +40,31 @@ class PostalCodeWithTest extends TestCase
         $this->assertNotContains('values.1', $validator->errors()->keys());
     }
 
+    public function testItFailsWhenInputIsNotStringable(): void
+    {
+        $data = ['value' => [], 'other' => 'NL'];
+        $rules = ['value' => 'postal_code_with:other'];
+
+        $validator = Validator::make($data, $rules);
+
+        $this->assertFalse($validator->passes());
+    }
+
     /** @link https://github.com/axlon/laravel-postal-code-validation/issues/23 */
     public function testItFailsWhenInputIsNull(): void
     {
         $data = ['value' => null, 'other' => 'NL'];
         $rules = ['value' => 'postal_code_with:other'];
+
+        $validator = Validator::make($data, $rules);
+
+        $this->assertFalse($validator->passes());
+    }
+
+    public function testItFailsWhenOtherContainsError(): void
+    {
+        $data = ['value' => '1234', 'other' => []];
+        $rules = ['other' => 'string', 'value' => 'postal_code_with:other'];
 
         $validator = Validator::make($data, $rules);
 

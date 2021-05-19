@@ -6,11 +6,13 @@ use Axlon\PostalCodeValidation\Support\Constraint;
 use Illuminate\Support\Facades\Facade;
 
 /**
- * @method static bool fails(string $countryCode, string ...$postalCodes)
- * @method static bool passes(string $countryCode, string ...$postalCodes)
+ * @method static string getExample(string $key)
+ * @method static string getRule(string $key)
+ * @method static bool hasExample(string $key)
+ * @method static bool hasRule(string $key)
  * @method static void override(array|string $countryCode, string|null $pattern = null)
- * @method static bool supports(string $countryCode)
- * @see \Axlon\PostalCodeValidation\PostalCodeValidator
+ *
+ * @see \Axlon\PostalCodeValidation\Contracts\Ruleset
  */
 class PostalCodes extends Facade
 {
@@ -31,6 +33,18 @@ class PostalCodes extends Facade
     protected static function getFacadeAccessor(): string
     {
         return 'postal_codes';
+    }
+
+    /**
+     * Validate the given value.
+     *
+     * @param string $key
+     * @param string $value
+     * @return bool
+     */
+    public static function validate(string $key, string $value): bool
+    {
+        return preg_match(static::getRule($key), $value) === 1;
     }
 
     /**

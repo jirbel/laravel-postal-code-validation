@@ -2,6 +2,8 @@
 
 namespace Axlon\PostalCodeValidation;
 
+use Axlon\PostalCodeValidation\Contracts\Ruleset;
+use Axlon\PostalCodeValidation\Rules\ISO3166_1\Alpha2;
 use Illuminate\Support\ServiceProvider;
 use Illuminate\Validation\Factory;
 
@@ -24,11 +26,11 @@ class ValidationServiceProvider extends ServiceProvider
             });
         }
 
-        $this->app->singleton('postal_codes', function () {
-            return new PostalCodeValidator(require __DIR__ . '/../resources/patterns.php');
+        $this->app->singletonIf('postal_codes', function () {
+            return new Alpha2();
         });
 
-        $this->app->alias('postal_codes', PostalCodeValidator::class);
+        $this->app->alias('postal_codes', Ruleset::class);
     }
 
     /**
@@ -41,12 +43,12 @@ class ValidationServiceProvider extends ServiceProvider
     {
         $validator->replacer(
             'postal_code',
-            'Axlon\PostalCodeValidation\Extensions\PostalCode@replace',
+            'Axlon\PostalCodeValidation\PostalCodeValidator@replacePostalCode',
         );
 
         $validator->replacer(
             'postal_code_with',
-            'Axlon\PostalCodeValidation\Extensions\PostalCodeFor@replace',
+            'Axlon\PostalCodeValidation\PostalCodeValidator@replacePostalCodeWith',
         );
     }
 
@@ -60,12 +62,12 @@ class ValidationServiceProvider extends ServiceProvider
     {
         $validator->extend(
             'postal_code',
-            'Axlon\PostalCodeValidation\Extensions\PostalCode@validate',
+            'Axlon\PostalCodeValidation\PostalCodeValidator@validatePostalCode',
         );
 
         $validator->extendDependent(
             'postal_code_with',
-            'Axlon\PostalCodeValidation\Extensions\PostalCodeFor@validate',
+            'Axlon\PostalCodeValidation\PostalCodeValidator@validatePostalCodeWith',
         );
     }
 }

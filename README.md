@@ -21,7 +21,6 @@ Worldwide postal code validation for Laravel, based on Google's Address Data Ser
     - [Lumen](#lumen)
 - [Usage](#usage)
     - [Available rules](#available-rules)
-    - [Fluent API](#fluent-api)
     - [Adding an error message](#adding-an-error-message)
     - [Manually validating](#manually-validating)
     - [Overriding rules](#overriding-rules)
@@ -81,18 +80,7 @@ countries in [ISO 3166-1 alpha-2](https://en.wikipedia.org/wiki/ISO_3166-1_alpha
 'postal_code' => 'postal_code:NL',
 ```
 
-#### postal_code_with:foo,bar,...
-The field under validation must be a postal code in at least one of the countries in the given fields _only if_ at least
-one of the specified fields is present.
-
-```php
-'country' => 'required|string|max:2',
-...
-'postal_code' => 'postal_code_with:country',
-```
-
-### Fluent API
-If you prefer using a fluent object style over string based rules, that's also available:
+If you need to pass the country from a variable or function you may use the rule builder to do so, for example:
 
 ```php
 use Axlon\PostalCodeValidation\Support\Facades\PostalCodes;
@@ -100,11 +88,22 @@ use Axlon\PostalCodeValidation\Support\Facades\PostalCodes;
 ...
 
 'postal_code' => [
-    PostalCodes::for('NL'),
+    PostalCodes::for($user->getCountry()),
 ],
 ```
 
-The same goes for the `postal_code_with` rule:
+#### postal_code_with:foo,bar,...
+The field under validation must be a postal code in at least one of the countries in the given fields.
+
+```php
+'country' => 'required|string|max:2',
+'postal_code' => 'postal_code_with:country',
+```
+
+> You should always validate the fields you reference, this rule will automatically skip referenced fields that fail
+> validation
+
+You may also use the rule builder:
 
 ```php
 use Axlon\PostalCodeValidation\Support\Facades\PostalCodes;
@@ -112,7 +111,6 @@ use Axlon\PostalCodeValidation\Support\Facades\PostalCodes;
 ...
 
 'country' => 'required|string|max:2',
-...
 'postal_code' => [
     PostalCodes::with('country'),
 ],
@@ -141,7 +139,11 @@ If you want to validate postal codes manually outside of Laravel's validation sy
 directly, like so:
 
 ```php
-PostalCodes::passes($country, $postalCode); // returns a boolean
+use Axlon\PostalCodeValidation\Support\Facades\PostalCodes;
+
+...
+
+PostalCodes::validate('NL', '1234 AB'); // true
 ```
 
 ### Overriding rules

@@ -28,6 +28,16 @@ class PostalCodeTest extends TestCase
         $this->assertFalse($validator->passes());
     }
 
+    public function testItFailsWhenInputIsNotStringable(): void
+    {
+        $data = ['value' => []];
+        $rules = ['value' => 'postal_code:NL'];
+
+        $validator = Validator::make($data, $rules);
+
+        $this->assertFalse($validator->passes());
+    }
+
     /** @link https://github.com/axlon/laravel-postal-code-validation/issues/23 */
     public function testItFailsWhenInputIsNull(): void
     {
