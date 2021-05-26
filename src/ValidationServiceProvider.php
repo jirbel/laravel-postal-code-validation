@@ -63,11 +63,13 @@ class ValidationServiceProvider extends ServiceProvider
         $validator->extend(
             'postal_code',
             'Axlon\PostalCodeValidation\PostalCodeValidator@validatePostalCode',
+            'The :attribute must be a valid postal code.',
         );
 
         $validator->extendDependent(
             'postal_code_with',
             'Axlon\PostalCodeValidation\PostalCodeValidator@validatePostalCodeWith',
+            'The :attribute must be a valid postal code.',
         );
     }
 }

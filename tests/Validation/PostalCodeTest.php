@@ -16,6 +16,7 @@ class PostalCodeTest extends TestCase
         $validator = Validator::make($data, $rules);
 
         $this->assertFalse($validator->passes());
+        $this->assertContains('The value must be a valid postal code.', $validator->errors()->all());
     }
 
     public function testItFailsWhenInputIsInvalid(): void
@@ -26,6 +27,7 @@ class PostalCodeTest extends TestCase
         $validator = Validator::make($data, $rules);
 
         $this->assertFalse($validator->passes());
+        $this->assertContains('The value must be a valid postal code.', $validator->errors()->all());
     }
 
     public function testItFailsWhenInputIsNotStringable(): void
@@ -36,6 +38,7 @@ class PostalCodeTest extends TestCase
         $validator = Validator::make($data, $rules);
 
         $this->assertFalse($validator->passes());
+        $this->assertContains('The value must be a valid postal code.', $validator->errors()->all());
     }
 
     /** @link https://github.com/axlon/laravel-postal-code-validation/issues/23 */
@@ -47,6 +50,7 @@ class PostalCodeTest extends TestCase
         $validator = Validator::make($data, $rules);
 
         $this->assertFalse($validator->passes());
+        $this->assertContains('The value must be a valid postal code.', $validator->errors()->all());
     }
 
     public function testItPassesValidation(): void

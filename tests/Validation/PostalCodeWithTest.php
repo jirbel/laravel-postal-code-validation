@@ -16,6 +16,7 @@ class PostalCodeWithTest extends TestCase
         $validator = Validator::make($data, $rules);
 
         $this->assertFalse($validator->passes());
+        $this->assertContains('The value must be a valid postal code.', $validator->errors()->all());
     }
 
     public function testItFailsWhenInputIsInvalid(): void
@@ -26,18 +27,20 @@ class PostalCodeWithTest extends TestCase
         $validator = Validator::make($data, $rules);
 
         $this->assertFalse($validator->passes());
+        $this->assertContains('The value must be a valid postal code.', $validator->errors()->all());
     }
 
     public function testItFailsWhenInputIsInvalidArray(): void
     {
+        $customAttributes = ['values.0' => 'first value', 'values.1' => 'second value'];
         $data = ['values' => ['invalid', '4000'], 'others' => ['NL', 'BE']];
         $rules = ['values.*' => 'postal_code_with:others.*'];
 
-        $validator = Validator::make($data, $rules);
+        $validator = Validator::make($data, $rules, [], $customAttributes);
 
         $this->assertFalse($validator->passes());
-        $this->assertContains('values.0', $validator->errors()->keys());
-        $this->assertNotContains('values.1', $validator->errors()->keys());
+        $this->assertContains('The first value must be a valid postal code.', $validator->errors()->all());
+        $this->assertNotContains('The second value must be a valid postal code.', $validator->errors()->all());
     }
 
     public function testItFailsWhenInputIsNotStringable(): void
@@ -48,6 +51,7 @@ class PostalCodeWithTest extends TestCase
         $validator = Validator::make($data, $rules);
 
         $this->assertFalse($validator->passes());
+        $this->assertContains('The value must be a valid postal code.', $validator->errors()->all());
     }
 
     /** @link https://github.com/axlon/laravel-postal-code-validation/issues/23 */
@@ -59,6 +63,7 @@ class PostalCodeWithTest extends TestCase
         $validator = Validator::make($data, $rules);
 
         $this->assertFalse($validator->passes());
+        $this->assertContains('The value must be a valid postal code.', $validator->errors()->all());
     }
 
     public function testItFailsWhenOtherContainsError(): void
@@ -69,6 +74,7 @@ class PostalCodeWithTest extends TestCase
         $validator = Validator::make($data, $rules);
 
         $this->assertFalse($validator->passes());
+        $this->assertContains('The value must be a valid postal code.', $validator->errors()->all());
     }
 
     public function testItPassesValidation(): void
