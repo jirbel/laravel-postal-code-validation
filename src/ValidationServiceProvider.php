@@ -26,9 +26,9 @@ class ValidationServiceProvider extends ServiceProvider
             });
         }
 
-        $this->app->singletonIf('postal_codes', function () {
+        $this->app->bindIf('postal_codes', function () {
             return new Alpha2();
-        });
+        }, true);
 
         $this->app->alias('postal_codes', Ruleset::class);
     }
