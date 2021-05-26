@@ -23,7 +23,8 @@ abstract class Ruleset implements RulesetContract
     {
         if (is_array($key)) {
             $this->overrides = array_merge(
-                $this->overrides, array_change_key_case($key, CASE_UPPER),
+                $this->overrides,
+                array_change_key_case($key, CASE_UPPER),
             );
         } else {
             $this->overrides[strtoupper($key)] = $rule;
