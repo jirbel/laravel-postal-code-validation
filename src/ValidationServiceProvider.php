@@ -12,7 +12,7 @@ class ValidationServiceProvider extends ServiceProvider
      *
      * @return void
      */
-    public function register(): void
+    public function register()
     {
         if ($this->app->resolved('validator')) {
             $this->registerRules($this->app['validator']);
